@@ -1,7 +1,6 @@
 use crate::layer::Layer;
 use crate::tensor::Tensor;
 
-
 pub struct ReLU {
     input: Option<Tensor>,
 }
@@ -20,20 +19,18 @@ impl Layer for ReLU {
 
     fn backward(&mut self, output_gradient: Tensor) -> Tensor {
         let input = self.input.as_ref().unwrap();
-        
         let derivative = input.mapv(|x| if x > 0.0 { 1.0 } else { 0.0 });
         output_gradient * derivative
     }
 
     fn get_params_mut(&mut self) -> Vec<&mut Tensor> {
-        vec![] // No learnable parameters
+        vec![]
     }
 
     fn get_grads(&self) -> Vec<&Tensor> {
         vec![]
     }
 }
-
 
 pub struct Sigmoid {
     output: Option<Tensor>,
@@ -47,7 +44,6 @@ impl Sigmoid {
 
 impl Layer for Sigmoid {
     fn forward(&mut self, input: Tensor) -> Tensor {
-        // Sigmoid formula: 1 / (1 + e^-x)
         let output = input.mapv(|x| 1.0 / (1.0 + (-x).exp()));
         self.output = Some(output.clone());
         output
@@ -55,7 +51,6 @@ impl Layer for Sigmoid {
 
     fn backward(&mut self, output_gradient: Tensor) -> Tensor {
         let output = self.output.as_ref().unwrap();
-        
         let derivative = output * (1.0 - output);
         output_gradient * derivative
     }
@@ -68,7 +63,6 @@ impl Layer for Sigmoid {
         vec![]
     }
 }
-
 
 pub struct Tanh {
     output: Option<Tensor>,
@@ -89,7 +83,6 @@ impl Layer for Tanh {
 
     fn backward(&mut self, output_gradient: Tensor) -> Tensor {
         let output = self.output.as_ref().unwrap();
-        // Derivative: 1 - output^2
         let derivative = 1.0 - (output * output);
         output_gradient * derivative
     }
@@ -98,7 +91,4 @@ impl Layer for Tanh {
         vec![]
     }
 
-    fn get_grads(&self) -> Vec<&Tensor> {
-        vec![]
-    }
-}
+    fn get_grads(&self
