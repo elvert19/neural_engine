@@ -1,5 +1,5 @@
-use crate::layer::Layer;
 use crate::tensor::Tensor;
+use crate::layer::Layer;
 
 pub struct ReLU {
     input: Option<Tensor>,
@@ -19,8 +19,7 @@ impl Layer for ReLU {
 
     fn backward(&mut self, output_gradient: Tensor) -> Tensor {
         let input = self.input.as_ref().unwrap();
-        let derivative = input.mapv(|x| if x > 0.0 { 1.0 } else { 0.0 });
-        output_gradient * derivative
+        output_gradient * input.mapv(|x| if x > 0.0 { 1.0 } else { 0.0 })
     }
 
     fn get_params_mut(&mut self) -> Vec<&mut Tensor> {
@@ -51,8 +50,7 @@ impl Layer for Sigmoid {
 
     fn backward(&mut self, output_gradient: Tensor) -> Tensor {
         let output = self.output.as_ref().unwrap();
-        let derivative = output * (1.0 - output);
-        output_gradient * derivative
+        output_gradient * output * (1.0 - output)
     }
 
     fn get_params_mut(&mut self) -> Vec<&mut Tensor> {
@@ -83,12 +81,14 @@ impl Layer for Tanh {
 
     fn backward(&mut self, output_gradient: Tensor) -> Tensor {
         let output = self.output.as_ref().unwrap();
-        let derivative = 1.0 - (output * output);
-        output_gradient * derivative
+        output_gradient * (1.0 - output * output)
     }
 
     fn get_params_mut(&mut self) -> Vec<&mut Tensor> {
         vec![]
     }
 
-    fn get_grads(&self
+    fn get_grads(&self) -> Vec<&Tensor> {
+        vec![]
+    }
+}

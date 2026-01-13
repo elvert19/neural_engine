@@ -18,9 +18,10 @@ impl SGD {
 impl Optimizer for SGD {
     fn update(&mut self, layers: &mut [Box<dyn Layer>]) {
         for layer in layers {
+            let grads = layer.get_grads().iter().map(|&g| g.clone()).collect::<Vec<_>>();
             let params = layer.get_params_mut();
-            let grads = layer.get_grads();
-            for (param, grad) in params.into_iter().zip(grads) {
+            
+            for (param, grad) in params.into_iter().zip(grads.iter()) {
                 *param -= &(grad * self.learning_rate);
             }
         }
@@ -70,10 +71,10 @@ impl Optimizer for Adam {
         }
         
         for (i, layer) in layers.iter_mut().enumerate() {
+            let grads = layer.get_grads().iter().map(|&g| g.clone()).collect::<Vec<_>>();
             let params = layer.get_params_mut();
-            let grads = layer.get_grads();
             
-            for (j, (param, grad)) in params.into_iter().zip(grads).enumerate() {
+            for (j, (param, grad)) in params.into_iter().zip(grads.iter()).enumerate() {
                 self.m[i][j] = self.beta1 * &self.m[i][j] + (1.0 - self.beta1) * grad;
                 self.v[i][j] = self.beta2 * &self.v[i][j] + (1.0 - self.beta2) * (grad * grad);
                 

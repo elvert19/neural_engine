@@ -7,7 +7,7 @@ pub mod utilis;
 
 use pyo3::prelude::*;
 use pyo3::exceptions::PyValueError;
-use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2};
+use numpy::{PyArray2, PyReadonlyArray2};
 use ndarray::Array2;
 use layer::{Layer, Dense};
 use activation::{ReLU, Sigmoid, Tanh};
@@ -78,7 +78,7 @@ impl Default for Sequential {
     }
 }
 
-#[pyclass(name = "Sequential")]
+#[pyclass(name = "Sequential", unsendable)]
 struct PySequential {
     inner: Sequential,
     optimizer: Option<PyOptimizer>,
@@ -136,20 +136,22 @@ impl PySequential {
         &mut self,
         py: Python<'py>,
         input: PyReadonlyArray2<f64>,
-    ) -> &'py PyArray2<f64> {
+    ) -> Bound<'py, PyArray2<f64>> {
         let input_tensor = input.as_array().to_owned();
         let output_tensor = self.inner.forward(input_tensor);
-        output_tensor.into_pyarray(py)
+        // FIXED: Changed `from_array_bound` to `from_array`
+        PyArray2::from_array(py, &output_tensor)
     }
 
     fn predict<'py>(
         &mut self,
         py: Python<'py>,
         input: PyReadonlyArray2<f64>,
-    ) -> &'py PyArray2<f64> {
+    ) -> Bound<'py, PyArray2<f64>> {
         let input_tensor = input.as_array().to_owned();
         let output_tensor = self.inner.predict(&input_tensor);
-        output_tensor.into_pyarray(py)
+        // FIXED: Changed `from_array_bound` to `from_array`
+        PyArray2::from_array(py, &output_tensor)
     }
 
     fn train<'py>(
@@ -158,7 +160,7 @@ impl PySequential {
         inputs: PyReadonlyArray2<f64>,
         targets: PyReadonlyArray2<f64>,
         epochs: usize,
-    ) -> PyResult<&'py PyArray2<f64>> {
+    ) -> PyResult<Bound<'py, PyArray2<f64>>> {
         let inputs_tensor = inputs.as_array().to_owned();
         let targets_tensor = targets.as_array().to_owned();
 
@@ -179,7 +181,8 @@ impl PySequential {
         let loss_array = Array2::from_shape_vec((loss_history.len(), 1), loss_history)
             .map_err(|e| PyValueError::new_err(format!("Failed to create loss array: {}", e)))?;
 
-        Ok(loss_array.into_pyarray(py))
+        // FIXED: Changed `from_array_bound` to `from_array`
+        Ok(PyArray2::from_array(py, &loss_array))
     }
 
     fn layer_count(&self) -> usize {
@@ -216,7 +219,7 @@ impl PyLoss {
 }
 
 #[pymodule]
-fn neural_engine(_py: Python, m: &PyModule) -> PyResult<()> {
+fn neural_engine(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PySequential>()?;
     Ok(())
 }
