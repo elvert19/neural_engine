@@ -92,7 +92,7 @@ Used for **Binary Classification** (predicting 0 or 1). It penalizes confident w
 
 ### Build & Install
 
-Run this in the project root to compile the Rust backend and install it into your Python environment:
+Run this in the project root to compile the Rust backend and install it into your Python environment since we cannot be able to use cargo functions in this case:
 
 ```bash
 maturin develop --release
