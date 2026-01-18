@@ -55,30 +55,22 @@ The core logic of the engine relies on the following mathematical principles.
 
 ### 1. Loss Functions
 
-The "loss" measures the difference between the model's prediction () and the actual target ().
-
 #### Mean Squared Error (MSE)
+Used primarily for **Regression** problems.
+$$L = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$$
 
-Used primarily for **Regression** problems (predicting a continuous number). It calculates the average of the squares of the errors.
-
-**Derivative (for Backpropagation):**
-To train the network, we need the gradient of the loss with respect to the output:
-
+**Derivative for Backpropagation:**
+$$\frac{\partial L}{\partial \hat{y}} = \frac{2}{n} (\hat{y} - y)$$
 
 #### Binary Cross-Entropy (BCE)
-
-Used for **Binary Classification** (predicting 0 or 1). It penalizes confident wrong predictions heavily.
-
-**Derivative (for Backpropagation):**
-
+Used for **Binary Classification**.
+$$L = -\frac{1}{n} \sum_{i=1}^{n} [y_i \ln(\hat{y}_i) + (1 - y_i) \ln(1 - \hat{y}_i)]$$
 
 ### 2. Activation Functions
 
-#### Sigmoid
-
-#### Tanh (Hyperbolic Tangent)
-
-#### ReLU (Rectified Linear Unit)
+* **Sigmoid:** $\sigma(x) = \frac{1}{1 + e^{-x}}$
+* **Tanh:** $\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$
+* **ReLU:** $f(x) = \max(0, x)$
 
 ---
 
