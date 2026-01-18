@@ -76,13 +76,11 @@ $$L = -\frac{1}{n} \sum_{i=1}^{n} [y_i \ln(\hat{y}_i) + (1 - y_i) \ln(1 - \hat{y
 ### 2. Activation Functions
 
 * **Sigmoid:** $\sigma(x) = \frac{1}{1 + e^{-x}}$
-
-* 
+ 
 * **Tanh:** $\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$
-
-* 
+ 
 * **ReLU:** $f(x) = \max(0, x)$
-* 
+  
 
 ---
 
