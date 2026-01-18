@@ -59,18 +59,26 @@ The core logic of the engine relies on the following mathematical principles.
 Used primarily for **Regression** problems.
 $$L = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$$
 
+
+
+
 **Derivative for Backpropagation:**
 $$\frac{\partial L}{\partial \hat{y}} = \frac{2}{n} (\hat{y} - y)$$
+
+
 
 #### Binary Cross-Entropy (BCE)
 Used for **Binary Classification**.
 $$L = -\frac{1}{n} \sum_{i=1}^{n} [y_i \ln(\hat{y}_i) + (1 - y_i) \ln(1 - \hat{y}_i)]$$
+
+
 
 ### 2. Activation Functions
 
 * **Sigmoid:** $\sigma(x) = \frac{1}{1 + e^{-x}}$
 * **Tanh:** $\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$
 * **ReLU:** $f(x) = \max(0, x)$
+* 
 
 ---
 
