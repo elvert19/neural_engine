@@ -31,8 +31,8 @@ def test_xor():
 
     print("\n--- Starting Training ---")
     epochs = 1000
-    loss_history = model.train(X, y, epochs)
-    
+    loss_history = model.train(X, y, epochs, 4)
+
     print(f"\nFinal Loss: {loss_history[-1][0]:.6f}")
 
     print("\n--- Predictions ---")

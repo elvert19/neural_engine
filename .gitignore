@@ -1,3 +1,4 @@
+
 # --- Rust ---
 /target/
 **/*.rs.bk
@@ -14,3 +15,9 @@ venv/
 .vscode/
 .idea/
 *.swp
+/target
+/venv
+__pycache__/
+*.so
+*.pyd
+.DS_Store

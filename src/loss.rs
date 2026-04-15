@@ -37,3 +37,24 @@ impl Loss for BinaryCrossEntropy {
         (&pred_clipped - targets) / (&pred_clipped * (1.0 - &pred_clipped) * n)
     }
 }
+
+pub struct CategoricalCrossEntropy;
+
+impl Loss for CategoricalCrossEntropy {
+    fn compute(&self, predictions: &Tensor, targets: &Tensor) -> f64 {
+        let epsilon = 1e-15;
+        let clipped = predictions.mapv(|x| x.max(epsilon).min(1.0 - epsilon));
+        // sum over classes, mean over samples
+        -(targets * clipped.mapv(|x| x.ln()))
+            .sum_axis(ndarray::Axis(1))
+            .mean()
+            .unwrap()
+    }
+
+    fn derivative(&self, predictions: &Tensor, targets: &Tensor) -> Tensor {
+        // combined CCE + Softmax gradient = predicted - true
+        // divide by batch size for correct scaling
+        let n = predictions.shape()[0] as f64;
+        (predictions - targets) / n
+    }
+}

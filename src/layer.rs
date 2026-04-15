@@ -34,13 +34,12 @@ impl Layer for Dense {
         input.dot(&self.weights) + &self.biases
     }
 
-    fn backward(&mut self, output_gradient: Tensor) -> Tensor {
-        let input = self.input.as_ref().unwrap();
-        self.grad_weights = input.t().dot(&output_gradient);
-        self.grad_biases = output_gradient.sum_axis(Axis(0)).insert_axis(Axis(0));
-        output_gradient.dot(&self.weights.t())
-    }
-
+fn backward(&mut self, output_gradient: Tensor) -> Tensor {
+    let input = self.input.as_ref().unwrap();
+    self.grad_weights = input.t().dot(&output_gradient);
+    self.grad_biases = output_gradient.sum_axis(Axis(0)).insert_axis(Axis(0));
+    output_gradient.dot(&self.weights.t())
+}
     fn get_params_mut(&mut self) -> Vec<&mut Tensor> {
         vec![&mut self.weights, &mut self.biases]
     }

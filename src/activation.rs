@@ -92,3 +92,40 @@ impl Layer for Tanh {
         vec![]
     }
 }
+pub struct Softmax  {
+    output:  Option<Tensor>,
+
+}
+
+
+impl Softmax {
+    pub fn new ()  -> Self {
+        Self {output:None} 
+    }
+}
+
+
+impl Layer for Softmax {
+    fn forward(&mut self, input: Tensor) -> Tensor {
+        // subtract row-max to prevent e^huge = Inf
+        let max_vals = input.fold_axis(
+            ndarray::Axis(1),
+            f64::NEG_INFINITY,
+            |&acc, &x| acc.max(x),
+        );
+        let shifted = &input - &max_vals.insert_axis(ndarray::Axis(1));
+        let exp_vals = shifted.mapv(f64::exp);
+        let row_sums = exp_vals.sum_axis(ndarray::Axis(1));
+        let output = &exp_vals / &row_sums.insert_axis(ndarray::Axis(1));
+        self.output = Some(output.clone());
+        output
+    }
+
+    fn backward(&mut self, grad_output: Tensor) -> Tensor {
+        // simplified — correct when paired with CCE loss
+        grad_output
+    }
+
+    fn get_params_mut(&mut self) -> Vec<&mut Tensor> { vec![] }
+    fn get_grads(&self) -> Vec<&Tensor> { vec![] }
+}
