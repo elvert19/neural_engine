@@ -1,3 +1,4 @@
+extern crate blas_src;
 pub mod tensor;
 pub mod layer;
 pub mod activation;
@@ -13,6 +14,7 @@ use layer::{Layer, Dense};
 use activation::{ReLU, Sigmoid, Tanh, Softmax};
 use optimizer::{Optimizer, SGD, Adam};
 use loss::{Loss, MSE, BinaryCrossEntropy, CategoricalCrossEntropy};
+
 
 type Tensor = Array2<f64>;
 
